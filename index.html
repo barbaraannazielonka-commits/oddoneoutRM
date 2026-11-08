@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Odd One Out – Kitchen Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg1:#fff4e0;--bg2:#ffd9b0;--card:#fff;--ink:#2b2118;--mut:#7a6a5a;--acc:#e8590c;--ok:#2f9e44;--okbg:#d3f9d8;--no:#e03131;--nobg:#ffe3e3;--bd:#f0d9bd;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#2a1d12;--bg2:#3b2614;--card:#3a2c20;--ink:#fbeedd;--mut:#c9b49b;--acc:#ff922b;--ok:#69db7c;--okbg:#1f3d27;--no:#ff8787;--nobg:#4a2222;--bd:#5a4331;color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#2a1d12;--bg2:#3b2614;--card:#3a2c20;--ink:#fbeedd;--mut:#c9b49b;--acc:#ff922b;--ok:#69db7c;--okbg:#1f3d27;--no:#ff8787;--nobg:#4a2222;--bd:#5a4331;color-scheme:dark}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:"Trebuchet MS",Verdana,sans-serif;background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px}
+main{width:100%;max-width:640px;flex:1}
+h1{font-family:Georgia,serif;text-align:center;margin:8px 0 2px;font-size:2rem;color:var(--acc)}
+.sub{text-align:center;color:var(--mut);margin:0 0 16px}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:20px;padding:20px;box-shadow:0 6px 18px rgba(120,60,0,.12)}
+.lv{display:grid;gap:10px;margin:14px 0}
+button{font:inherit;cursor:pointer}
+.lvbtn{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border-radius:14px;border:2px solid var(--bd);background:var(--card);color:var(--ink)}
+.lvbtn:hover{border-color:var(--acc)}.lvbtn .e{font-size:1.8rem}.lvbtn b{display:block}.lvbtn small{color:var(--mut)}
+.top{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:8px}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden;margin-bottom:16px}.bar i{display:block;height:100%;background:var(--acc);transition:width .3s}
+.q{text-align:center;font-size:1.1rem;margin:0 0 14px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{padding:20px 8px;font-size:1.15rem;font-weight:bold;border-radius:14px;border:2px solid var(--bd);background:var(--bg1);color:var(--ink);transition:transform .1s}
+.opt:hover:not(:disabled){transform:translateY(-2px);border-color:var(--acc)}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}.opt.no{background:var(--nobg);border-color:var(--no)}
+.opt:disabled{cursor:default}
+.fb{margin-top:16px;padding:14px;border-radius:14px;line-height:1.45}
+.fb.ok{background:var(--okbg);border:2px solid var(--ok)}.fb.no{background:var(--nobg);border:2px solid var(--no)}
+.main{display:block;width:100%;margin-top:14px;padding:14px;border:0;border-radius:14px;background:var(--acc);color:#fff;font-weight:bold;font-size:1.05rem}
+.big{font-size:3rem;text-align:center}.c{text-align:center}
+.hide{display:none}
+footer{margin-top:24px;padding:16px;text-align:center;font-size:1.3rem;font-weight:bold;color:var(--mut);border-top:2px solid var(--bd);width:100%;max-width:640px}
+@media(max-width:420px){.opts{grid-template-columns:1fr}}
+</style></head><body>
+<main>
+<h1>🍳 Odd One Out</h1>
+<p class="sub">Kitchen &amp; Food Processing Edition</p>
+<div id="menu" class="card"><p class="c"><b>Four words. One doesn’t belong.</b><br>Find the odd one out. If you’re wrong, you’ll see the right answer and why.</p>
+<div class="lv" id="lvs"></div></div>
+<div id="game" class="card hide">
+<div class="top"><span id="lname"></span><span id="score"></span></div>
+<div class="bar"><i id="pb"></i></div>
+<p class="q" id="qn"></p><div class="opts" id="opts"></div>
+<div id="fb" class="fb hide"></div><button class="main hide" id="next">Next ➜</button></div>
+<div id="end" class="card hide"><div class="big" id="stars"></div><h2 class="c" id="res"></h2><p class="c" id="msg"></p>
+<button class="main" id="again">Play this level again</button><button class="main" id="nl">Next level ➜</button><button class="main" id="home" style="background:var(--mut)">Level menu</button></div>
+</main>
+<footer>Nannestad High School – Barbara Anna Zielonka</footer>
+<script>
+const L=[
+{n:"Level 1 – Kitchen Basics",e:"🥄",d:"Easy · everyday words",q:[
+[["Knife","Whisk","Ladle","Carrot"],"Carrot","A carrot is a food (an ingredient). Knife, whisk and ladle are kitchen tools."],
+[["Salmon","Cod","Haddock","Chicken"],"Chicken","Chicken is poultry (a bird). Salmon, cod and haddock are all fish."],
+[["Starter","Main course","Dessert","Apron"],"Apron","An apron is clothing you wear. Starter, main course and dessert are parts of a meal."],
+[["Tomato","Onion","Cucumber","Cheese"],"Cheese","Cheese is a dairy product made from milk. The others are vegetables."],
+[["Fridge","Freezer","Cold room","Grill"],"Grill","A grill makes food hot. Fridges, freezers and cold rooms keep food cold."],
+[["Boil","Fry","Bake","Chop"],"Chop","Chopping is cutting food. Boil, fry and bake are ways of cooking with heat."],
+[["Waiter","Chef","Dishwasher","Customer"],"Customer","A customer is a guest who eats at the restaurant. The others are staff who work there."],
+[["Salt","Pepper","Oregano","Flour"],"Flour","Flour is a baking ingredient. Salt, pepper and oregano are used to season food."],
+[["Plate","Bowl","Cup","Spatula"],"Spatula","A spatula is a tool used for cooking and turning food. Plates, bowls and cups are tableware used for serving and eating."],
+[["Apple","Banana","Strawberry","Potato"],"Potato","A potato is a vegetable. Apples, bananas and strawberries are fruits."]]},
+{n:"Level 2 – Kitchen Skills",e:"🔪",d:"Medium · cooking, hygiene, service",q:[
+[["Sour","Sweet","Salty","Crunchy"],"Crunchy","Crunchy describes texture. Sour, sweet and salty are tastes."],
+[["Gloves","Hairnet","Apron","Thermometer"],"Thermometer","A thermometer is a tool for measuring temperature. The others are protective clothing."],
+[["Peel","Slice","Dice","Simmer"],"Simmer","To simmer is to cook gently in liquid. Peel, slice and dice are preparation steps."],
+[["Butter","Cream","Yoghurt","Margarine"],"Margarine","Margarine is usually made from plant oils. The others are made from milk."],
+[["Bacteria","Mould","Virus","Detergent"],"Detergent","Detergent is a cleaning product. Bacteria, mould and viruses are micro-organisms that can spoil food or make people ill."],
+[["Sauté","Grill","Roast","Freeze"],"Freeze","Freezing is a way of preserving food by making it very cold. The others cook food with heat."],
+[["Reservation","Menu","Bill","Colander"],"Colander","A colander is a kitchen tool for draining food. The others belong to restaurant service."],
+[["Beef","Pork","Lamb","Tuna"],"Tuna","Tuna is a fish. Beef, pork and lamb are red meat."],
+[["Wash","Rinse","Sanitise","Season"],"Season","To season is to add flavour with salt, herbs or spices. Washing, rinsing and sanitising are all ways of cleaning."],
+[["Hot","Warm","Cold","Spicy"],"Spicy","Spicy describes a strong, burning flavour, for example from chilli. Hot, warm and cold describe temperature."]]},
+{n:"Level 3 – Pro Chef",e:"👨‍🍳",d:"Hard · professional and food processing words",q:[
+[["Canning","Smoking","Curing","Filleting"],"Filleting","Filleting means cutting meat or fish into pieces. Canning, smoking and curing are ways of preserving food."],
+[["Julienne","Brunoise","Chiffonade","Blanch"],"Blanch","To blanch is to briefly boil food, then cool it quickly in cold water. The others are knife cuts."],
+[["Peanuts","Milk","Eggs","Rice"],"Rice","Peanuts, milk and eggs are among the major allergens that must be declared in the EU. Rice is not."],
+[["Shelf life","Best before","Use by","Seasoning"],"Seasoning","Seasoning adds flavour. The other three are about how long food stays safe or good to eat."],
+[["Mince","Sausage","Burger","Sirloin"],"Sirloin","Sirloin is a whole cut of beef. Mince, sausages and burgers are made from ground or chopped meat."],
+[["Yeast","Baking powder","Sourdough starter","Cornflour"],"Cornflour","Cornflour thickens sauces. Yeast, baking powder and sourdough starter make dough rise."],
+[["Sommelier","Sous chef","Pastry chef","Commis"],"Sommelier","A sommelier is a wine expert who works with the guests. The others work in the kitchen."],
+[["Hygiene","Traceability","Whisk","HACCP"],"Whisk","A whisk is a tool. Hygiene, traceability and HACCP are part of food safety systems."],
+[["Salmonella","Listeria","E. coli","Garlic"],"Garlic","Garlic is a vegetable used for flavour. Salmonella, Listeria and E. coli are bacteria that can cause food poisoning."],
+[["Béchamel","Hollandaise","Velouté","Croissant"],"Croissant","A croissant is a pastry. Béchamel, hollandaise and velouté are classic sauces."]]}];
+const $=i=>document.getElementById(i),sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let lv=0,qi=0,sc=0,items=[];
+L.forEach((l,i)=>{const b=document.createElement("button");b.className="lvbtn";b.innerHTML=`<span class="e">${l.e}</span><span><b>${l.n}</b><small>${l.d} · 10 questions</small></span>`;b.onclick=()=>start(i);$("lvs").appendChild(b)});
+function show(id){["menu","game","end"].forEach(x=>$(x).classList.toggle("hide",x!==id))}
+function start(i){lv=i;qi=0;sc=0;items=sh(L[i].q);show("game");$("lname").textContent=L[i].n;ask()}
+function ask(){const[w,a]=items[qi];$("qn").textContent=`Question ${qi+1} of 10: which word is the odd one out?`;$("pb").style.width=qi/10*100+"%";$("score").textContent="⭐ "+sc;
+$("fb").classList.add("hide");$("next").classList.add("hide");$("opts").innerHTML="";
+sh(w).forEach(x=>{const b=document.createElement("button");b.className="opt";b.textContent=x;b.onclick=()=>pick(b,x);$("opts").appendChild(b)})}
+function pick(b,x){const[,a,ex]=items[qi],ok=x===a;if(ok)sc++;
+[...$("opts").children].forEach(o=>{o.disabled=true;if(o.textContent===a)o.classList.add("ok")});if(!ok)b.classList.add("no");
+const f=$("fb");f.className="fb "+(ok?"ok":"no");f.innerHTML=ok?`✅ <b>Correct!</b> ${ex}`:`❌ <b>Not quite.</b> The odd one out is <b>${a}</b>. ${ex}`;
+$("score").textContent="⭐ "+sc;$("next").textContent=qi==9?"See my result ➜":"Next ➜";$("next").classList.remove("hide")}
+$("next").onclick=()=>{qi++;qi<10?ask():finish()};
+function finish(){show("end");$("stars").textContent=sc>=9?"🏆":sc>=7?"🥇":sc>=5?"🥈":"🍞";
+$("res").textContent=`You got ${sc} out of 10`;
+$("msg").textContent=sc==10?"Perfect! Michelin-star thinking!":sc>=8?"Well done, chef! Almost perfect.":sc>=5?"Good work. Keep practising these words.":"Keep cooking! Try again and read the explanations.";
+$("nl").classList.toggle("hide",lv==2)}
+$("again").onclick=()=>start(lv);$("nl").onclick=()=>start(lv+1);$("home").onclick=()=>show("menu");
+</script></body></html>
